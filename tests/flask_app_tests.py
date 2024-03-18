@@ -18,13 +18,13 @@ class Test_chatgpt_service(unittest.TestCase):
 
         self.assertIn("SELECT", result)
 
-    def test_text_to_sql_nonexist_table(self):
+    def test_text_to_sql_nonexisted_table(self):
         test_prompt = "How many birds are there from the table birds_examples"
 
         result = text_to_sql(test_prompt)
         print(result)
 
-        self.assertIn("SELECT", result)
+        self.assertIn("birds_examples", result)
 
     def test_sql_is_query_select(self):
         test_SQL = "SELECT * FROM tsla_stock_data LIMIT 1"
@@ -43,14 +43,3 @@ class Test_chatgpt_service(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-"""
-# Test api server later
-    def test_text_to_sql_modify_db(self):
-        test_prompt = "Create birds_examples table"
-
-        result = text_to_sql(test_prompt)
-        print(result)
-
-        self.assertIn("NO", result)
-"""
