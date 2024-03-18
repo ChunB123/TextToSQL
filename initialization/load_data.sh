@@ -1,0 +1,1 @@
+psql -U $POSTGRES_USER -d $POSTGRES_DB -c "\COPY tsla_stock_data FROM '/docker-entrypoint-initdb.d/tsla_2014_2023.csv' DELIMITER ',' CSV HEADER;"
