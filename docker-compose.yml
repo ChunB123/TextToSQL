@@ -4,8 +4,8 @@ services:
   flask_api:
     build: ./flask_app
     volumes:
-      - ./flask_app:/app
-    working_dir: /app
+      - ./flask_app:/flask_app
+    working_dir: /flask_app
     environment:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
@@ -14,6 +14,8 @@ services:
     command: flask run
     ports:
       - "5000:5000"
+    env_file:
+      - .env
     depends_on:
       - db
 

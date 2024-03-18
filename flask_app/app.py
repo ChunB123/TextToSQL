@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from urllib.parse import urlparse
+from flask_app.service.chatgpt_service import text_to_sql, sql_is_query_or_not
 import os
+
 
 app = Flask(__name__)
 
@@ -26,14 +28,20 @@ def get_db_connection():
 @app.route('/query', methods=['POST'])
 def run_query():
     data = request.json
-    sql_query = data.get('query')
+    text_query = data.get('query')
 
-    if not sql_query:
-        return jsonify({"error": "No SQL query provided"}), 400
+    if not text_query:
+        return jsonify({"error": "No text query provided"}), 400
 
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+        # Ask model to convert the text to SQL
+        sql_query = text_to_sql(text_query)
+        if not sql_is_query_or_not(sql_query):
+            return jsonify({"error": "Query is not a SELECT SQL", "sql_query": sql_query}), 400
+
         cursor.execute(sql_query)
         if cursor.description:  # If there is something to fetch
             result = cursor.fetchall()
@@ -43,9 +51,17 @@ def run_query():
             conn.commit()
             conn.close()
             return jsonify({"success": "Query executed successfully, but no output to show."}), 200
-    except (Exception, psycopg2.DatabaseError) as error:
+    except psycopg2.DatabaseError as error:
         return jsonify({"error": "Failed to execute query", "sql_query": sql_query, "database_error": str(error)}), 400
+    except Exception as e:  # This will capture any other exceptions not caught by the previous clause
+        return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
 
+@app.errorhandler(Exception)
+def handle_exception(error):
+    """Handle all application errors."""
+    # You can also log the error here if you want to keep track of it
+    response = {"error": "An unexpected error occurred", "details": str(error)}
+    return jsonify(response), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
