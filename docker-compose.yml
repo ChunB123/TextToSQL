@@ -2,20 +2,11 @@ version: '3'
 
 services:
   flask_api:
-    build: ./flask_app
+    build: .
     volumes:
-      - ./flask_app:/flask_app
-    working_dir: /flask_app
-    environment:
-      - FLASK_APP=app.py
-      - FLASK_RUN_HOST=0.0.0.0
-      - FLASK_ENV=development
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
-    command: flask run
+      - .:/TextToSQL
     ports:
       - "5000:5000"
-    env_file:
-      - .env
     depends_on:
       - db
 

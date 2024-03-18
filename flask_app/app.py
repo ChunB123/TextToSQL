@@ -27,6 +27,7 @@ def get_db_connection():
 
 @app.route('/query', methods=['POST'])
 def run_query():
+    print("start")
     data = request.json
     text_query = data.get('query')
 
@@ -60,8 +61,6 @@ def run_query():
 def handle_exception(error):
     """Handle all application errors."""
     # You can also log the error here if you want to keep track of it
+    print("start")
     response = {"error": "An unexpected error occurred", "details": str(error)}
     return jsonify(response), 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
