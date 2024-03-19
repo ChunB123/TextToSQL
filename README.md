@@ -2,9 +2,11 @@
 
 
 # Commands
+```
 pip freeze > requirements.txt
 docker compose rm -fsv flask_api db
 docker compose up --build
+```
 
 # Prompt template
 ### Task
