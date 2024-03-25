@@ -1,10 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import psycopg2
 from flask_app.service.chatgpt_service import text_to_sql, sql_is_query_or_not
 from flask_app.db_config.extensions import postgresDB
 from flask_app.utils import respond
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 postgresDB.init_app(app)
 
 

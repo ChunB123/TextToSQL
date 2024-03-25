@@ -1,4 +1,4 @@
-def generate_text_to_sql_prompt(question):
+def generate_text_to_sql_prompt(user_question):
     prompt = """Generate a SQL query to answer [QUESTION]{user_question}[/QUESTION]
 
     The query will run on a database with the following schema:
@@ -29,6 +29,6 @@ def generate_text_to_sql_prompt(question):
         next_day_close NUMERIC
     );"""
     prompt = prompt.format(
-        user_question=question, table_metadata_string=table_metadata_string
+        user_question=user_question, table_metadata_string=table_metadata_string
     )
     return prompt
